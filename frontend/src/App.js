@@ -1,51 +1,50 @@
-import {createBrowserRouter, RouterProvider} from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import './index.css';
 import HomePage from './pages/HomePage';
 import EventsPage from './pages/EventsPage';
 import EventDetailPage from './pages/EventDetailPage';
 import NewEventPage from './pages/NewEventPage';
 import EditEventPage from './pages/EditEventPage';
-// Challenge / Exercise
+import RootLayout from './components/layout/RootLayout';
+import ErrorPage from './pages/ErrorPage';
+import EventsRootLayout from './components/layout/EventsRootLayout';
+console.log('EventsRootLayout:', EventsRootLayout);
 
-// 1. Add five new (dummy) page components (content can be simple <h1> elements)
-//    - HomePage
-//    - EventsPage
-//    - EventDetailPage
-//    - NewEventPage
-//    - EditEventPage
-// 2. Add routing & route definitions for these five pages
-//    - / => HomePage
-//    - /events => EventsPage
-//    - /events/<some-id> => EventDetailPage
-//    - /events/new => NewEventPage
-//    - /events/<some-id>/edit => EditEventPage
-// 3. Add a root layout that adds the <MainNavigation> component above all page components
-// 4. Add properly working links to the MainNavigation
-// 5. Ensure that the links in MainNavigation receive an "active" class when active
-// 6. Output a list of dummy events to the EventsPage
-//    Every list item should include a link to the respective EventDetailPage
-// 7. Output the ID of the selected event on the EventDetailPage
-// BONUS: Add another (nested) layout route that adds the <EventNavigation> component above all /events... page components
+ // Assuming you have a global CSS file for styles
 
 const router = createBrowserRouter([
   {
     path: '/',
-    Element: <HomePage />,
-  },
-  {
-    path: '/events',
-    Element: <EventsPage />,
-  },
-  {
-    path: '/events/:eventId',
-    Element: <EventDetailPage />,
-  },
-  {
-    path: '/events/new',
-    Element: <NewEventPage />,
-  },
-  {
-    path: '/events/:eventId/edit',
-    Element: <EditEventPage />,
+    element: <RootLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        index: true, // Ana sayfa için index tanımı (yani path: '/')
+        element: <HomePage />,
+      },
+      {
+        path: 'events',
+        element: <EventsRootLayout />, // BONUS layout
+        children: [
+          {
+            index: true, // /events
+            element: <EventsPage />,
+          },
+          {
+            path: 'new', // /events/new
+            element: <NewEventPage />,
+          },
+          {
+            path: ':eventId', // /events/:eventId
+            element: <EventDetailPage />,
+          },
+          {
+            path: ':eventId/edit', // /events/:eventId/edit
+            element: <EditEventPage />,
+          },
+        ],
+      },
+    ],
   },
 ]);
 
